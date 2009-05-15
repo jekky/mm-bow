@@ -1,13 +1,14 @@
 function mm_bow_train
 eval('config_file');
+addpath('./svm');
 
 [train_frames,test_frames] = do_random_indices(0);
 load(kmeans_codebook_file);
 F = K_M';
 
 % svm
-[train_label,train_data]=read_sparse(kmeans_train_datafile);
-[test_label,test_data]=read_sparse(kmeans_test_datafile);
+[train_label,train_data]=read_sparse(combined_train_datafile);
+[test_label,test_data]=read_sparse(combined_test_datafile);
 % [c, cv_accracy] = cross_Validation(train_label, train_data, [-20:20], 5);
 % model = svmtrain(train_label, train_data, ['-c ',num2str(c),' -t 0 -b 1']);
 % svmtrain(train_label, train_data, [' -t 0 -v 5 -b 1']);
@@ -32,8 +33,10 @@ for i = 1 : max(train_label)
         % save(new_codebook_file,'newF');
         save(combined_codebook_file,'newF');
         % generate_new_train_test_histogram;
-        generate_combined_train_test_histogram(1,0);
-        genearte_svm_data(2);
+        generate_combined_train_test_histogram(0);
+        genearte_svm_data;
+        % [train_label,train_data]=read_sparse(new_train_datafile);
+        % [test_label,test_data]=read_sparse(new_test_datafile);
         [train_label,train_data]=read_sparse(combined_train_datafile);
         [test_label,test_data]=read_sparse(combined_test_datafile);
 %         if (size(test_data,2)<codebook_size)
@@ -51,13 +54,15 @@ for i = 1 : max(train_label)
             [recons_obj,margin_obj] = calc_obj(F,W,-binary_train_label,0);
             fprintf('Objective values: %f and %f. Difference between G is %f ...\n',recons_obj,margin_obj,con_diff);
             newF = update_f(W,-binary_train_label,lambda,0);
-            save(combined_codebook_file,'newF');
+            % save(new_codebook_file,'newF');
+            % save(combined_codebook_file,'newF');
             [recons_obj,margin_obj] = calc_obj(newF,W,-binary_train_label,0);
             FF_inv = inv(newF'*newF);
             con_diff = update_g(newF,FF_inv,W,-binary_train_label,lambda,0);
             init_flag = 0;
         else
             newF = update_f(W,-binary_train_label,lambda,1);
+            % save(new_codebook_file,'newF');
             save(combined_codebook_file,'newF');
             [recons_obj,margin_obj] = calc_obj(newF,W,-binary_train_label,1);
             FF_inv = inv(newF'*newF);
@@ -65,7 +70,7 @@ for i = 1 : max(train_label)
         end
         [recons_obj,margin_obj] = calc_obj(newF,W,-binary_train_label,1);
         fprintf('Objective values: %f and %f. Difference between G is %f ...\n',recons_obj,margin_obj,con_diff);
-        save(combined_codebook_file,'newF');
+        
         eval_classification(newF,model,i);
         
         while (con_diff>conv_thres)
@@ -81,11 +86,10 @@ for i = 1 : max(train_label)
             eval_classification(newF,model,i);
         end
         
-        eval_classification(newF,model,i);
         %% save results of each classifier
-        generate_combined_train_test_histogram(1,1);
-        genearte_svm_data(2);
-        model = svm_train_test(2,i);
+        generate_combined_train_test_histogram(1);
+        genearte_svm_data
+        model = svm_train_test(i);
         save([results_path,num2str(i),'-classifier.mat'],'newF','model');        
     % end
 end

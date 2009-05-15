@@ -53,7 +53,6 @@ switch type
         load(combined_test_histogram_file);
     case 3               
         load(combined_multiclass_test_histogram_file);
-end
 
 cur_idx = 1;
 for cidx = 1 : size(test_frames,2)

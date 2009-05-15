@@ -1,4 +1,4 @@
-function model = svm_train_test(type,pos_class)
+function model = svm_train_test_multiclass
 
 %% Load config file
 eval('config_file');
@@ -6,14 +6,12 @@ addpath('./svm');
 
 [train_frames,test_frames] = do_random_indices(0);
 %% Solution 1: calculate kernel matrix inside
-switch type
-    case 1
-        [train_label,train_data]=read_sparse(kmeans_train_datafile);
-        [test_label,test_data]=read_sparse(kmeans_test_datafile);
-    case 2
-        [train_label,train_data]=read_sparse(combined_train_datafile);
-        [test_label,test_data]=read_sparse(combined_test_datafile);
-end
+% [train_label,train_data]=read_sparse(kmeans_train_datafile);
+% [test_label,test_data]=read_sparse(kmeans_test_datafile);
+% [train_label,train_data]=read_sparse(new_train_datafile);
+% [test_label,test_data]=read_sparse(new_test_datafile);
+[train_label,train_data]=read_sparse(combined_train_datafile);
+[test_label,test_data]=read_sparse(combined_test_datafile);
 
 % pos_class = 1;
 

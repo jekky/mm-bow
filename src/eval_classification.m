@@ -4,17 +4,8 @@ eval('config_file');
 FF_inv = inv(newF'*newF);
 calc_test_g(newF,FF_inv);
 % generate_new_train_test_histogram
-generate_combined_train_test_histogram(1);
-genearte_svm_data
-
-% [train_label,train_data]=read_sparse(new_train_datafile);
-% [test_label,test_data]=read_sparse(new_test_datafile);
-% if (size(train_data,2)<codebook_size)
-%     train_data = [train_data,zeros(size(train_data,1),codebook_size-size(train_data,2))];
-% end
-% if (size(test_data,2)<codebook_size)
-%     test_data = [test_data,zeros(size(test_data,1),codebook_size-size(test_data,2))];
-% end
+generate_combined_train_test_histogram(1,1);
+genearte_svm_data(2);
 
 [train_label,train_data]=read_sparse(combined_train_datafile);
 [test_label,test_data]=read_sparse(combined_test_datafile);
@@ -32,4 +23,4 @@ end
 [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
 [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);
 
-svm_train_test;
+model = svm_train_test(1,pos_class);

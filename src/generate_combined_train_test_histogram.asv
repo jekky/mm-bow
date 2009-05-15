@@ -50,12 +50,9 @@ for cidx = 1 : size(train_frames,2)
     end
 end
 disp('finished generating train data ...\n');
-switch type
-    case 1
-        save(combined_train_histogram_file,'train_data');
-    case 2        
-        save(combined_multiclass_train_histogram_file,'train_data');
-end
+switch 
+% save(combined_train_histogram_file,'train_data');
+save(combined_multiclass_train_histogram_file,'train_data');
 
 fprintf('--------------------------------------------------------\n');
 fprintf('Generate bag-of-features histogram for test data ...\n');
@@ -91,9 +88,5 @@ for cidx = 1 : size(test_frames,2)
 end
 
 disp('finished generating test data ...\n');
-switch type
-    case 1
-        save(combined_test_histogram_file,'test_data');
-    case 2
-        save(combined_multiclass_test_histogram_file,'test_data');
-end
+% save(combined_test_histogram_file,'test_data');
+save(combined_multiclass_test_histogram_file,'test_data');
