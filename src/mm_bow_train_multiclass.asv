@@ -31,17 +31,15 @@ for i = 1 : max(train_label)
     con_diff = inf; init_flag = 1;
     newF = F;
     % save(new_codebook_file,'newF');
-    save(combined_codebook_file,'newF');
+    save(combined_multiclass_codebook_file,'newF');
     % generate_new_train_test_histogram;
-    generate_combined_train_test_histogram(0);
-    genearte_svm_data;
-    % [train_label,train_data]=read_sparse(new_train_datafile);
-    % [test_label,test_data]=read_sparse(new_test_datafile);
+    generate_combined_train_test_histogram(2,0);
+    genearte_svm_data(3);
     [train_label,train_data]=read_sparse(combined_train_datafile);
     [test_label,test_data]=read_sparse(combined_test_datafile);
     
-    svmtrain(binary_train_label, train_data, [' -t 0 -v 5']);
-    model = svmtrain(binary_train_label, train_data, [' -t 0']);
+    svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0 -v 5']);
+    model = svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0']);
     [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
     [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);
 
@@ -72,19 +70,17 @@ end
 [recons_obj,margin_obj] = calc_obj_multiclass(newF,Ws,1);
 fprintf('Objective values: %f and %f. Difference between G is %f ...\n',recons_obj,margin_obj,con_diff);
 save(combined_multiclass_codebook_file,'newF');
-mm_bow_test;
+evaluate_multiclass_classification;
         
 while (con_diff>conv_thres)
     newF = update_f_multiclass(Ws,lambda,1);
     [recons_obj,margin_obj] = calc_obj_multiclass(newF,Ws,1);
     FF_inv = inv(newF'*newF);
     con_diff = update_g_multiclass(newF,FF_inv,Ws,lambda,1);
-    [recons_obj,margin_obj] = calc_obj(newF,Ws,1);
+    [recons_obj,margin_obj] = calc_obj_multiclass(newF,Ws,1);
     fprintf('Objective values: %f and %f. Difference between G is %f ...\n',recons_obj,margin_obj,con_diff);
     % save(new_codebook_file,'newF');
     save(combined_multiclass_codebook_file,'newF');
 
-    eval_classification(newF,model,i);
+    evaluate_multiclass_classification;
 end
-        
-eval_classification(newF,model,i);

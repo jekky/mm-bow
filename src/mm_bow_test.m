@@ -18,15 +18,25 @@ for i = 1 : class_num
     generate_combined_train_test_histogram(1,1);
     genearte_svm_data(2);
     
-    [test_label,test_data]=read_sparse(combined_test_datafile);
+    [train_label,train_data] = read_sparse(combined_train_datafile);
+    [test_label,test_data] = read_sparse(combined_test_datafile);
     
+    binary_train_label = (-1).*ones(length(train_label),1);
+    binary_train_label(find(train_label==i)) = 1;
     binary_test_label = (-1).*ones(length(test_label),1);
     binary_test_label(find(test_label==i)) = 1;
 
     if (i==1)
+        binary_train_label = -binary_train_label;
         binary_test_label = -binary_test_label;
     end
-    [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);    
+%     [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
+%     [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);    
+
+    svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0 -v 5']);
+    model = svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0']);
+    [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
+    [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);
     
     if (i==1)
         predict_label = -predict_label;

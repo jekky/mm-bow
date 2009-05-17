@@ -4,8 +4,8 @@ addpath('./svm');
 database_name = 'WI';
 codebook_size = 100;
 feature_dim = 131;
-conv_thres = 10;
-lambda = 10;
+conv_thres = 1;
+lambda = 500000;
 
 % %%% WI
 Categories.Name = {

@@ -29,8 +29,8 @@ for i = 1 : class_num
         binary_test_label = -binary_test_label;
     end
     
-    svmtrain(binary_train_label, train_data, [' -t 0 -v 5']);
-    model = svmtrain(binary_train_label, train_data, [' -t 0']);
+    svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0 -v 5']);
+    model = svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0']);
     [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
     [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);
         

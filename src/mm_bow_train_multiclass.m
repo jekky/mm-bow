@@ -38,8 +38,8 @@ for i = 1 : max(train_label)
     [train_label,train_data]=read_sparse(combined_train_datafile);
     [test_label,test_data]=read_sparse(combined_test_datafile);
     
-    svmtrain(binary_train_label, train_data, [' -t 0 -v 5']);
-    model = svmtrain(binary_train_label, train_data, [' -t 0']);
+    svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0 -v 5']);
+    model = svmtrain(binary_train_label, train_data, [' -w1 9 -w-1 1 -t 0']);
     [predict_label, accuracy, ypred] = svmpredict(binary_train_label, train_data, model);
     [predict_label, accuracy, ypred] = svmpredict(binary_test_label, test_data, model);
 
